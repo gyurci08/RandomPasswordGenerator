@@ -1,80 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace PasswordGenerator.Security
 {
-    public static class PasswordGenerator
+    public class PasswordGenerator
     {
-
-        public static int Contains(string x, string y)
+        public string Generate(int CharLength, int SpecNum)
         {
-            int num = 0;
+            Random rnd = new Random();
+            string nChars = string.Empty;
+            string sChars = string.Empty;
 
-            for (int i = 0; i < x.Length; i++) 
-                {
-                    for(int j = 0; j < y.Length; j++) 
-                        {
-                            if (x[i] == y[j]) num++;
-                        }
-                }
+            for (int i = 0; i <= CharLength && i < (CharLength-SpecNum); i++)
+            {
+                nChars += (char)(rnd.Next(2) == 0 ? rnd.Next(48, 57) :
+                                 rnd.Next(2) == 0 ? rnd.Next(65, 90) : rnd.Next(97, 122));
+            }
 
+            for (int i = 0; i < SpecNum && i < SpecNum; i++)
+            {
+                sChars += (char)(rnd.Next(2) == 0 ? rnd.Next(33, 47) :
+                                 rnd.Next(2) == 0 ? rnd.Next(58, 64) : rnd.Next(123, 126));
+            }
 
-            return num;
-        }
-
-
-
-        public static String Generate(int CharLength, int SpecNum)
-        {
-            String pass="";
-            String letters = "abcdefghijkljmnopqrstuvwxyz";
-            String capitals = "ABCDEFGHIJKLJMNOPQRSTUVWXYZ";
-            String numbers = "1234567890";
-            String specials = "#&.@";
-
+            char[] ch = (nChars + sChars).ToCharArray();
             Random random = new Random();
 
-            int randNum;
-            int numOfSpecials=0;
-
-            while(numOfSpecials != SpecNum)
+            for (int i = ch.Length - 1; i > 0; i--)
             {
-                pass = "";
-
-                while (pass.Length != CharLength)
-                {
-                    randNum = random.Next(1, 5);
-
-                    switch (randNum)
-                    {
-                        case 1: pass = pass + (letters[random.Next(1, letters.Length)]); break;
-                        case 2: pass = pass + (capitals[random.Next(1, capitals.Length)]); break;
-                        case 3: pass = pass + (numbers[random.Next(1, numbers.Length)]); break;
-                        case 4: pass = pass + (specials[random.Next(1, specials.Length)]); break;
-                    }
-
-                    numOfSpecials = 0;
-                    numOfSpecials = Contains(pass, specials);
-
-                }
+                int j = random.Next(0, i + 1);
+                (ch[i], ch[j]) = (ch[j], ch[i]);
             }
-            
-
-
-           
-
-
-
-
-
-
-
-            return pass;
+            return new string(ch);
         }
-
-
     }
 }

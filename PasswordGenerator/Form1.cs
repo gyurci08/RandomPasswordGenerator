@@ -17,22 +17,21 @@ namespace PasswordGenerator
             InitializeComponent();
         }
 
-        private void generatePassBT_Click(object sender, EventArgs e)
+        private async void generatePassBT_Click(object sender, EventArgs e)
         {
-            int chars, spec;
 
-            if(int.TryParse(num_tb.Text, out chars)&& int.TryParse(spec_tb.Text, out spec))
-                {
-                    passwordTB.Text = Security.PasswordGenerator.Generate(chars,spec);
-                }
+            if (int.TryParse(num_tb.Text, out int chars) &&
+                int.TryParse(spec_tb.Text, out int spec) &&
+                spec <= chars  // <- It prevents an infinite loop.
+                )
+            {
+                passwordTB.Text = await Task.Run(() => new Security.PasswordGenerator().Generate(chars, spec));
+            }
             else
-                {
-                    MessageBox.Show("You should write in numbers...");
-                }
+            {
+                MessageBox.Show("Error!"); // There can be problems, other than just wrong input.
+            }
 
-
-            
         }
-
     }
 }
